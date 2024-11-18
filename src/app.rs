@@ -43,6 +43,20 @@ pub enum AppState {
     Error,
 }
 
+use std::fmt;
+impl fmt::Display for AppState {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s: &str = match self {
+            AppState::Empty => "E",
+            AppState::Table => "T",
+            AppState::Sheet => "S",
+            AppState::Command => "C",
+            AppState::Error => "X",
+        };
+        write!(f, "{}", s)
+    }
+}
+
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum AppAction {
     StatusBarStats,
@@ -186,6 +200,7 @@ impl App {
                             tab.data_frame().width()
                         ),
                     ),
+                    ("State", &format!("{}", self.infer_state())),
                 ]),
                 layout[1],
                 &mut self.status_bar,
